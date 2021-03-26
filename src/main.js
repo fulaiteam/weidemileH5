@@ -5,6 +5,11 @@ import router from './router'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 
+import axios from "axios";
+
+// 绑定到原型
+Vue.prototype.$axios = axios;
+
 Vue.use(Vant);
 
 Vue.config.productionTip = false

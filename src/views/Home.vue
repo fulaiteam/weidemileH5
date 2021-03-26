@@ -3,6 +3,7 @@
     <div class="w">
       <div class="content">
 
+        <!-- 轮播图 -->
         <div class="slideshow">
           <van-swipe
             class="my-swipe"
@@ -16,39 +17,53 @@
           </van-swipe>
         </div>
 
+        <!-- 最新咨询 -->
         <div class="new_dynamic">
           <div class="module_top">
             <div class="module_top_title">
               <div class="module_top_title_icon"></div>
-              <div class="module_top_title_font">最新动态</div>
+              <div class="module_top_title_font">{{newDynamicList.name}}</div>
             </div>
-            <div class="module_top_more">查看更多>></div>
+            <div class="module_top_more">
+              <a :href="newDynamicList.url" target="_blank">查看更多>></a>
+            </div>
           </div>
           <div class="dynamic_content">
             <div
               class="dynamic_content_list"
-              v-for="(item, index) in 3"
+              v-for="(item, index) in newDynamicList.contentDOS"
               :key="index"
+              @click="handleDynamicTo(item.url,index)"
             >
-              <img src="@/assets/images/uid5270b1616056073914@2x.png" alt="">
+              <img :src="item.imgurl" alt="">
               <div class="dynamic_content_list_right">
-                <div class="dynamic_content_list_right_title">精诚合作，魏德米勒</div>
-                <div class="dynamic_content_list_right_particulars"><div>化繁为简！魏德米</div></div>
+                <div
+                  class="dynamic_content_list_right_title"
+                  :class="{dynamic_content_list_right_title_pitch: pitchDynamic === index}"
+                >
+                  {{item.title}}
+                </div>
+                <div class="dynamic_content_list_right_divider"></div>
+                <div class="dynamic_content_list_right_particulars"><div>{{item.subtitle}}</div></div>
               </div>
-              <div class="dynamic_content_list_to">
-                <img src="@/assets/images/返回 拷贝 3@2x.png" alt="">
-              </div>
+              <div
+                class="dynamic_content_list_to"
+                :class="{dynamic_content_list_to_pitch: pitchDynamic === index}"
+              ></div>
             </div>
           </div>
         </div>
 
+        <!-- 展会 -->
         <div class="trade_show">
           <div class="module_top">
             <div class="module_top_title">
               <div class="show_top_title_icon"></div>
-              <div class="module_top_title_font">展会</div>
+              <div class="module_top_title_font">{{tradeShowList.name}}</div>
             </div>
-            <div class="module_top_more">查看更多>></div>
+            <div class="module_top_more">
+              <a :href="tradeShowList.url" target="_blank">查看更多>></a>
+            </div>
           </div>
           <div class="show_content">
             <div class="show_content_tab">
@@ -57,25 +72,29 @@
                 title-active-color='#EB8C00'
                 color='#EB8C00'
               >
-                <van-tab title="线上HIMI" :title-class="{tabClass: active==0}"></van-tab>
-                <van-tab title="慕尼黑电子展" :title-class="{tabClass: active==1}"></van-tab>
-                <van-tab title="成都自动化展" :title-class="{tabClass: active==2}"></van-tab>
+                <van-tab
+                  v-for="(item, index) in tradeShowList.contentDOS"
+                  :key="index"
+                  :title="item.title"
+                  :title-class="{tabClass: active == index}"
+                ></van-tab>
               </van-tabs>
             </div>
             <div class="show_content_list">
-              <div class="show_content_list_box" :class="{show_content_list_handle_box: active==0}">
-                <img src="@/assets/images/automation@2x.png" alt="">
-              </div>
-              <div class="show_content_list_box" :class="{show_content_list_handle_box: active==1}">
-                <img src="@/assets/images/automation@2x.png" alt="">
-              </div>
-              <div class="show_content_list_box" :class="{show_content_list_handle_box: active==2}">
-                <img src="@/assets/images/automation@2x.png" alt="">
+              <div
+                v-for="(item, index) in tradeShowList.contentDOS"
+                :key="index"
+                class="show_content_list_box"
+                :class="{show_content_list_handle_box: active==index}"
+                @click="handleShowContentTo(item.url,index)"
+              >
+                <img :src="item.imgurl" alt="">
               </div>
             </div>
           </div>
         </div>
 
+        <!-- 在线研讨会 -->
         <div class="online_meeting">
           <div class="module_top">
             <div class="module_top_title">
@@ -106,13 +125,16 @@
           </div>
         </div>
 
+        <!-- 在线大课堂 -->
         <div class="online_class">
           <div class="module_top">
             <div class="module_top_title">
               <div class="class_top_title_icon"></div>
-              <div class="module_top_title_font">在线大课堂</div>
+              <span class="module_top_title_font">在线大课堂</span>
             </div>
-            <div class="module_top_more">查看更多>></div>
+            <div class="module_top_more">
+              <a href="" target="_blank">查看更多>></a>
+            </div>
           </div>
           <div class="class_content">
             <div
@@ -126,9 +148,7 @@
                   <div class="class_content_list_right_title">魏德米勒OMNIMATE®总线连接解决方案</div>
                   <div class="class_content_list_right_particulars"><div>模块化和定制的解决方案</div></div>
                 </div>
-                <div class="class_content_list_right_right">
-                  <img src="@/assets/images/返回 拷贝 3@2x.png" alt="">
-                </div>
+                <div class="class_content_list_right_right"></div>
               </div>
             </div>
           </div>
@@ -145,14 +165,59 @@
 export default {
   data() {
     return {
+      pitchDynamic: '',  /* 最新咨询中被点击的文章索引 */
+      pitchSrc: require('@/assets/images/返回 拷贝 3@2x.png'),  /* 最新咨询中被点击的箭头图片路径 -- （不用了） */
       active: 1,  /* tabbar切换栏下标 */
-      tabbarTitle: ["线上HIMI","慕尼黑电子展","成都自动化展"]
+
+
+      slideshowList: {},  /* 轮播图数据 */
+      newDynamicList: {},  /* 最新动态模块数据 */
+      tradeShowList: {},  /* 展会模块数据 */
+      onlineMeetingList: {},  /* 在线研讨会模块数据 */
+      onlineClassList: {},  /* 在线大课堂模块数据 */
+
     };
+  },
+  created() {
+      // 页面进来, 需要马上获取数据
+      this.$axios({
+          url: 'http://192.168.3.162:4399/wdml/reception/selectAll',
+      }).then(res=>{
+          console.log(res.data.data);
+          let list = res.data.data
+          list.forEach((item, index)=> {
+            if (item.type === '1') {
+              this.slideshowList = item
+            } else if (item.type === '2') {
+              this.newDynamicList = item
+            } else if (item.type === '3') {
+              this.tradeShowList = item
+            }
+          })
+      })
   },
   watch: {
     active(a, b) {
       console.log(a, b)
     }
+  },
+  methods: {
+    
+    // 点击最新动态文章列表
+    handleDynamicTo(src, index) {
+      this.pitchDynamic = index;
+      setTimeout(() => {
+        this.pitchDynamic = ''
+      }, 1000);
+      window.open(src, "_blank");
+    },
+
+    // 点击展会图片
+    handleShowContentTo(src, index) {
+      this.active = index;
+      window.open(src, "_blank");
+    },
+
   }
 }
 </script>
@@ -172,6 +237,7 @@ export default {
     margin-bottom: 45/540 * 100vw;
     border-radius: 10/540 * 100vw;
     overflow: hidden;
+    cursor: pointer;
   }
   .my-swipe {
     width: 100%;
@@ -215,7 +281,7 @@ export default {
     font-family: Source Han Sans CN;
     font-weight: bold;
     color: #EB8C00;
-    letter-spacing: 1/540 * 100vw
+    letter-spacing: 1/540 * 100vw;
   }
   .module_top_more {
     font-size: 15/540 * 100vw;
@@ -226,6 +292,7 @@ export default {
   .dynamic_content {
     border-radius: 10/540 * 100vw;
     overflow: hidden;
+    cursor: pointer;
   }
   .dynamic_content_list {
     display: flex;
@@ -243,10 +310,10 @@ export default {
   }
   .dynamic_content_list_right_title {
       width: 197/540 * 100vw;
+      margin-bottom: 11/540 * 100vw;
       font-size: 18/540 * 100vw;
       font-family: Source Han Sans CN;
       font-weight: 400;
-      color: #EB8C00;
       line-height: 21/540 * 100vw;
       text-align: justify;
       overflow: hidden;
@@ -255,14 +322,22 @@ export default {
       -webkit-box-orient: vertical;
       word-break: break-all;
   }
+  .dynamic_content_list_right_title_pitch {
+    color: #EB8C00;
+  }
+  .dynamic_content_list_right_divider {
+    width: 248/540 * 100vw;
+    height: 4/540 * 100vw;
+    background: url('../assets/images/分割.png') no-repeat;
+    background-size: 100%;
+  }
   .dynamic_content_list_right_particulars {
       font-size: 15/540 * 100vw;
+      font-family: Source Han Sans CN;
       color: #8E8E8E;
       line-height: 19/540 * 100vw;
       text-align: justify; /* 末尾对齐 */
       padding-top: 10/540 * 100vw;
-      margin-top: 11/540 * 100vw;
-      border-top: 1/540 * 100vw dashed #EB8C00;
   }
   .dynamic_content_list_right_particulars div{
     width: 300.5/540 * 100vw;
@@ -281,12 +356,13 @@ export default {
     bottom: 13.5/540 * 100vw;
     width: 23.5/540 * 100vw;
     height: 24.5/540 * 100vw;
+    background: url('../assets/images/返回 拷贝 3@2x.png') no-repeat;
+    background-size: 100%;
   }
-  .dynamic_content_list_to img {
-    width: 100%;
-    height: 100%;
+  .dynamic_content_list_to_pitch {
+    background: url('../assets/images/返回@2x.png') no-repeat;
+    background-size: 100%;
   }
-
 
   .trade_show {
     margin-bottom: 23/540 * 100vw;
@@ -316,6 +392,7 @@ export default {
   .show_content_list_box {
     width: 128.5/540 * 100vw;
     height: 170/540 * 100vw;
+    cursor: pointer;
   }
   .show_content_list_box img {
     width: 100%;
@@ -330,17 +407,20 @@ export default {
     height: 100%;
   }
   .van-tabs--line /deep/ .van-tabs__wrap {
-    height: 28.5/540 * 100vw;
+    height: 36.5/540 * 100vw;
   }
   /deep/ .van-tab {
     font-size: 15/540 * 100vw;
+    font-family: Source Han Sans CN;
   }
   /deep/ .van-tabs__line {
     width: 60/540 * 100vw;
-    height: 1.5/540 * 100vw;
   }
   /deep/ .tabClass {
     font-size: 20/540 * 100vw;
+  }
+  /deep/ .van-tab__text--ellipsis {
+    overflow: visible;
   }
 
 
@@ -360,6 +440,7 @@ export default {
     background: #fff;
     margin-bottom: 25.5/540 * 100vw;
     border-radius: 5/540 * 100vw;
+    cursor: pointer;
   }
   .meeting_content_list img {
     width: 211.5/540 * 100vw;
@@ -371,6 +452,7 @@ export default {
   .meeting_content_list_right_title {
     height: 56/540 * 100vw;
     font-size: 18/540 * 100vw;
+    font-family: Source Han Sans CN;
     color: #EB8C00;
     line-height: 30/540 * 100vw;
     margin-bottom: 18/540 * 100vw;
@@ -393,10 +475,12 @@ export default {
   .meeting_content_list_right_info_left_backer {
     -webkit-transform:scale(0.8);
     margin-left: -14/540 * 100vw;
+    font-family: Source Han Sans CN;
   }
   .meeting_content_list_right_info_left_time {
     -webkit-transform:scale(0.8);
     margin-left: -14/540 * 100vw;
+    font-family: Source Han Sans CN;
   }
   .meeting_content_list_right_info_right {
     width: 57.3/540 * 100vw;
@@ -431,6 +515,7 @@ export default {
     background: #fff;
     padding: 22/540 * 100vw;
     margin-bottom: 1px;
+    cursor: pointer;
   }
   .class_content_list img {
     width: 115.5/540 * 100vw;
@@ -446,6 +531,7 @@ export default {
   .class_content_list_right_title {
     width: 209/540 * 100vw;
     font-size: 18/540 * 100vw;
+    font-family: Source Han Sans CN;
     color: #EB8C00;
     line-height: 21/540 * 100vw;
     text-align: justify;
@@ -457,6 +543,7 @@ export default {
   }
   .class_content_list_right_particulars {
     font-size: 15/540 * 100vw;
+    font-family: Source Han Sans CN;
     color: #8E8E8E;
     line-height: 19/540 * 100vw;
     text-align: justify; /* 末尾对齐 */
@@ -475,10 +562,12 @@ export default {
   .class_content_list_right_right {
     width: 23.5/540 * 100vw;
     height: 24.5/540 * 100vw;
+    background: url('../assets/images/返回 拷贝 3@2x.png') no-repeat;
+    background-size: 100%;
   }
-  .class_content_list_right_right img {
-    width: 100%;
-    height: 100%;
+  .dynamic_content_list_to_pitch {
+    background: url('../assets/images/返回@2x.png') no-repeat;
+    background-size: 100%;
   }
 
 </style>
