@@ -181,7 +181,7 @@ export default {
   created() {
       // 页面进来, 需要马上获取数据
       this.$axios({
-          url: 'http://192.168.3.162:4399/wdml/reception/selectAll',
+          url: 'https://kaifatest.hemajia.net/wdml/reception/selectAll',
       }).then(res=>{
           console.log(res.data.data);
           let list = res.data.data
