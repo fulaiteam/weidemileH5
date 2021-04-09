@@ -11,17 +11,19 @@
             indicator-color="white"
             :show-indicators=false
           >
-            <van-swipe-item v-for="(item, index) in 4" :key="index">
-              <img src="@/assets/images/16x9-2021-38ok原文件@2x.png" alt="" class="swipeImg">
+            <van-swipe-item v-for="(item, index) in slideshowList.contentDOS" :key="index">
+              <img :src="item.imgurl" alt="" class="swipeImg">
             </van-swipe-item>
           </van-swipe>
         </div>
 
-        <!-- 最新咨询 -->
+        <!-- 最新动态 -->
         <div class="new_dynamic">
           <div class="module_top">
             <div class="module_top_title">
-              <div class="module_top_title_icon"></div>
+              <div class="module_top_title_icon">
+                <img :src="newDynamicList.imgurl" alt="" class="module_top_title_icon_img">
+              </div>
               <div class="module_top_title_font">{{newDynamicList.name}}</div>
             </div>
             <div class="module_top_more">
@@ -39,16 +41,16 @@
               <div class="dynamic_content_list_right">
                 <div
                   class="dynamic_content_list_right_title"
-                  :class="{dynamic_content_list_right_title_pitch: pitchDynamic === index}"
+                  :class="{dynamic_content_list_right_title_pitch: index <= 0}"
                 >
                   {{item.title}}
                 </div>
                 <div class="dynamic_content_list_right_divider"></div>
-                <div class="dynamic_content_list_right_particulars"><div>{{item.subtitle}}</div></div>
+                <div class="dynamic_content_list_right_particulars">{{item.subtitle}}</div>
               </div>
               <div
                 class="dynamic_content_list_to"
-                :class="{dynamic_content_list_to_pitch: pitchDynamic === index}"
+                :class="{dynamic_content_list_to_pitch: index <= 0}"
               ></div>
             </div>
           </div>
@@ -58,13 +60,15 @@
         <div class="trade_show">
           <div class="module_top">
             <div class="module_top_title">
-              <div class="show_top_title_icon"></div>
+              <div class="module_top_title_icon">
+                <img :src="tradeShowList.imgurl" alt="" class="module_top_title_icon_img">
+              </div>
               <div class="module_top_title_font">{{tradeShowList.name}}</div>
             </div>
-            <div class="module_top_more">
+<!--             <div class="module_top_more">
               <a :href="tradeShowList.url" target="_blank">查看更多>></a>
             </div>
-          </div>
+ -->          </div>
           <div class="show_content">
             <div class="show_content_tab">
               <van-tabs
@@ -98,25 +102,34 @@
         <div class="online_meeting">
           <div class="module_top">
             <div class="module_top_title">
-              <div class="meeting_top_title_icon"></div>
-              <div class="module_top_title_font">在线研讨会</div>
+              <div class="module_top_title_icon">
+                <img :src="onlineMeetingList.imgurl" alt="" class="module_top_title_icon_img">
+              </div>
+              <div class="module_top_title_font">{{onlineMeetingList.name}}</div>
             </div>
           </div>
           <div class="meeting_content">
             <div
               class="meeting_content_list"
-              v-for="(item, index) in 5"
+              v-for="(item, index) in onlineMeetingList.contentDOS"
               :key="index"
+              @click="handleOnlineMeetingTo(item.url,index)"
             >
-              <img src="@/assets/images/u=3281973023,1261252532&fm=26&gp=0@2x.png" alt="">
+              <img :src="item.imgurl" alt="">
               <div class="meeting_content_list_right">
-                <div class="meeting_content_list_right_title">在线研讨会 各路大神教你怎么做</div>
+                <div
+                  class="meeting_content_list_right_title meeting_content_list_right_title_pitch"
+                >
+                  {{item.title}}
+                </div>
                 <div class="meeting_content_list_right_info">
                   <div class="meeting_content_list_right_info_left">
-                    <div class="meeting_content_list_right_info_left_backer">主持人：阿呆</div>
-                    <div class="meeting_content_list_right_info_left_time">时间：2021-03-04</div>
+                    <div class="meeting_content_list_right_info_left_backer">主持人：{{item.host}}</div>
+                    <div class="meeting_content_list_right_info_left_time">时间：{{item.time}}</div>
                   </div>
-                  <div class="meeting_content_list_right_info_right">
+                  <div
+                    class="meeting_content_list_right_info_right meeting_content_list_right_info_right_pitch"
+                  >
                     <span>查看</span>
                   </div>
                 </div>
@@ -129,26 +142,29 @@
         <div class="online_class">
           <div class="module_top">
             <div class="module_top_title">
-              <div class="class_top_title_icon"></div>
-              <span class="module_top_title_font">在线大课堂</span>
+              <div class="module_top_title_icon">
+                <img :src="onlineClassList.imgurl" alt="" class="module_top_title_icon_img">
+              </div>
+              <span class="module_top_title_font">{{onlineClassList.name}}</span>
             </div>
             <div class="module_top_more">
-              <a href="" target="_blank">查看更多>></a>
+              <a :href="onlineClassList.url" target="_blank">查看更多>></a>
             </div>
           </div>
           <div class="class_content">
             <div
               class="class_content_list"
-              v-for="(item, index) in 3"
+              v-for="(item, index) in onlineClassList.contentDOS"
               :key="index"
+              @click="handleOnlineClassTo(item.url,index)"
             >
-              <img src="@/assets/images/uid5270b1592184016427@2x.png" alt="">
+              <img :src="item.imgurl" alt="">
               <div class="class_content_list_right">
                 <div class="class_content_list_right_left">
-                  <div class="class_content_list_right_title">魏德米勒OMNIMATE®总线连接解决方案</div>
-                  <div class="class_content_list_right_particulars"><div>模块化和定制的解决方案</div></div>
+                  <div class="class_content_list_right_title" :class="{class_content_list_right_title_pitch: index <= 0}">{{item.title}}</div>
+                  <!-- <div class="class_content_list_right_particulars">{{item.subtitle}}</div> -->
                 </div>
-                <div class="class_content_list_right_right"></div>
+                <div class="class_content_list_right_right" :class="{dynamic_content_list_to_pitch: index <= 0}"></div>
               </div>
             </div>
           </div>
@@ -166,40 +182,40 @@ export default {
   data() {
     return {
       pitchDynamic: '',  /* 最新咨询中被点击的文章索引 */
+      ptichMeeting: '',  /* 在线研讨会中被点击的文章索引 */
+      ptichClass: '',    /* 在线大课堂中被点击的文章索引 */
       pitchSrc: require('@/assets/images/返回 拷贝 3@2x.png'),  /* 最新咨询中被点击的箭头图片路径 -- （不用了） */
       active: 1,  /* tabbar切换栏下标 */
 
-
-      slideshowList: {},  /* 轮播图数据 */
-      newDynamicList: {},  /* 最新动态模块数据 */
-      tradeShowList: {},  /* 展会模块数据 */
-      onlineMeetingList: {},  /* 在线研讨会模块数据 */
-      onlineClassList: {},  /* 在线大课堂模块数据 */
+      slideshowList: {},                /* 轮播图数据 */
+      newDynamicList: {},                /* 最新动态数据 */
+      tradeShowList: {},                  /* 展会数据 */
+      onlineMeetingList: {},              /* 在线研讨会模块数据 */
+      onlineClassList: {},                /* 在线大课堂模块数据 */
 
     };
   },
   created() {
       // 页面进来, 需要马上获取数据
       this.$axios({
-          url: 'https://kaifatest.hemajia.net/wdml/reception/selectAll',
+          url: 'https://kaifatest.hemajia.net/fulwdml/reception/selectAll',
       }).then(res=>{
-          console.log(res.data.data);
+          console.log(res);
           let list = res.data.data
           list.forEach((item, index)=> {
-            if (item.type === '1') {
+            if (item.id === '1') {
               this.slideshowList = item
-            } else if (item.type === '2') {
+            } else if (item.id === '2') {
               this.newDynamicList = item
-            } else if (item.type === '3') {
+            } else if (item.id === '3') {
               this.tradeShowList = item
+            } else if (item.id === '4') {
+              this.onlineMeetingList = item
+            } else if (item.id === '5') {
+              this.onlineClassList = item
             }
           })
       })
-  },
-  watch: {
-    active(a, b) {
-      console.log(a, b)
-    }
   },
   methods: {
     
@@ -218,6 +234,25 @@ export default {
       window.open(src, "_blank");
     },
 
+    // 点击在线研讨会
+    handleOnlineMeetingTo(src, index) {
+      this.ptichMeeting = index;
+      setTimeout(() => {
+        this.ptichMeeting = ''
+      }, 1000);
+      window.open(src, "_blank");
+    },
+
+    // 点击在线大课堂
+    handleOnlineClassTo(src, index) {
+      this.ptichClass = index;
+      setTimeout(() => {
+        this.ptichClass = ''
+      }, 1000);
+      window.open(src, "_blank");
+    },
+
+
   }
 }
 </script>
@@ -233,6 +268,7 @@ export default {
 
 
   .slideshow {
+    width: 100%;
     height: 265/540 * 100vw;
     margin-bottom: 45/540 * 100vw;
     border-radius: 10/540 * 100vw;
@@ -240,7 +276,7 @@ export default {
     cursor: pointer;
   }
   .my-swipe {
-    width: 100%;
+    width: 480/540 * 100vw;
     height: 100%;
   }
   .my-swipe .van-swipe-item {
@@ -251,7 +287,7 @@ export default {
     background-color: #39a9ed;
   }
   .swipeImg {
-    width: 100%;
+    width: 480/540 * 100vw;
     height: 100%;
   }
 
@@ -272,9 +308,13 @@ export default {
   .module_top_title_icon {
     width: 20.5/540 * 100vw;
     height: 20.5/540 * 100vw;
-    background: url('../assets/images/动态@2x.png') no-repeat;
-    background-size: 20.5/540 * 100vw;
     margin-right: 12/540 * 100vw;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .module_top_title_icon_img {
+    width: 20.5/540 * 100vw;
+    height: 20.5/540 * 100vw;
   }
   .module_top_title_font {
     font-size: 18/540 * 100vw;
@@ -309,23 +349,24 @@ export default {
     margin-left: 23/540 * 100vw;
   }
   .dynamic_content_list_right_title {
-      width: 197/540 * 100vw;
-      margin-bottom: 11/540 * 100vw;
-      font-size: 18/540 * 100vw;
-      font-family: Source Han Sans CN;
-      font-weight: 400;
-      line-height: 21/540 * 100vw;
-      text-align: justify;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      word-break: break-all;
+    width: 260/540 * 100vw;
+    height: 40/540 * 100vw;
+    padding-top: 6/540 * 100vw;
+    font-size: 18/540 * 100vw;
+    font-family: Source Han Sans CN;
+    font-weight: 400;
+    line-height: 21/540 * 100vw;
+    text-align: justify;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    word-break: break-all;
   }
   .dynamic_content_list_right_title_pitch {
     color: #EB8C00;
   }
   .dynamic_content_list_right_divider {
+    margin: 8/540 * 100vw 0 4/540 * 100vw;;
     width: 248/540 * 100vw;
     height: 4/540 * 100vw;
     background: url('../assets/images/分割.png') no-repeat;
@@ -337,23 +378,17 @@ export default {
       color: #8E8E8E;
       line-height: 19/540 * 100vw;
       text-align: justify; /* 末尾对齐 */
-      padding-top: 10/540 * 100vw;
-  }
-  .dynamic_content_list_right_particulars div{
-    width: 300.5/540 * 100vw;
-    overflow: hidden;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    word-break: break-all;
-    -webkit-transform:scale(0.8);
-    margin-left: -30/540 * 100vw;
+      width: 260/540 * 100vw;
+      height: 40/540 * 100vw;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      word-break: break-all;
   }
   .dynamic_content_list_to {
     position: absolute;
     right: 13.5/540 * 100vw;
-    bottom: 13.5/540 * 100vw;
+    bottom: 20.5/540 * 100vw;
     width: 23.5/540 * 100vw;
     height: 24.5/540 * 100vw;
     background: url('../assets/images/返回 拷贝 3@2x.png') no-repeat;
@@ -393,18 +428,20 @@ export default {
     width: 128.5/540 * 100vw;
     height: 170/540 * 100vw;
     cursor: pointer;
+    border-radius: 10/540 * 100vw;
+    overflow: hidden;
   }
   .show_content_list_box img {
-    width: 100%;
-    height: 100%;
+    width: 128.5/540 * 100vw;
+    height: 170/540 * 100vw;
   }
   .show_content_list_handle_box {
     width: 164/540 * 100vw;
     height: 216.5/540 * 100vw;
   }
   .show_content_list_handle_box img {
-    width: 100%;
-    height: 100%;
+    width: 164/540 * 100vw;
+    height: 216.5/540 * 100vw;
   }
   .van-tabs--line /deep/ .van-tabs__wrap {
     height: 36.5/540 * 100vw;
@@ -417,7 +454,7 @@ export default {
     width: 60/540 * 100vw;
   }
   /deep/ .tabClass {
-    font-size: 20/540 * 100vw;
+    font-size: 18/540 * 100vw;
   }
   /deep/ .van-tab__text--ellipsis {
     overflow: visible;
@@ -436,7 +473,7 @@ export default {
   }
   .meeting_content_list {
     display: flex;
-    align-items: center;
+    position: relative;
     background: #fff;
     margin-bottom: 25.5/540 * 100vw;
     border-radius: 5/540 * 100vw;
@@ -447,21 +484,23 @@ export default {
     height: 152.5/540 * 100vw;
   }
   .meeting_content_list_right {
+    width: 268.3/540 * 100vw;
     padding: 15/540 * 100vw 21/540 * 100vw 15/540 * 100vw 15.5/540 * 100vw;
   }
   .meeting_content_list_right_title {
     height: 56/540 * 100vw;
     font-size: 18/540 * 100vw;
     font-family: Source Han Sans CN;
-    color: #EB8C00;
     line-height: 30/540 * 100vw;
     margin-bottom: 18/540 * 100vw;
     text-align: justify;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
     word-break: break-all;
+  }
+  .meeting_content_list_right_title_pitch {
+    color: #EB8C00;
   }
   .meeting_content_list_right_info {
     display: flex;
@@ -471,16 +510,10 @@ export default {
   .meeting_content_list_right_info_left {
     font-size: 14/540 * 100vw;
     color: #8E8E8E;
-  }
-  .meeting_content_list_right_info_left_backer {
-    -webkit-transform:scale(0.8);
-    margin-left: -14/540 * 100vw;
     font-family: Source Han Sans CN;
   }
   .meeting_content_list_right_info_left_time {
-    -webkit-transform:scale(0.8);
-    margin-left: -14/540 * 100vw;
-    font-family: Source Han Sans CN;
+    margin-left: 1/540 * 100vw;
   }
   .meeting_content_list_right_info_right {
     width: 57.3/540 * 100vw;
@@ -488,13 +521,15 @@ export default {
     line-height: 28.65/540 * 100vw;
     text-align: center;
     border-radius: 10/540 * 100vw;
-    background: #EB8C00;
+    background: #8E8E8E;
     color: #fff;
     font-size: 15/540 * 100vw;
   }
+  .meeting_content_list_right_info_right_pitch {
+    background: #EB8C00;
+  }
   .meeting_content_list_right_info_right span {
     display: inline-block;
-    -webkit-transform:scale(0.9);
   }
 
 
@@ -511,16 +546,18 @@ export default {
   }
   .class_content_list {
     display: flex;
-    align-items: center;
+    position: relative;
     background: #fff;
     padding: 22/540 * 100vw;
     margin-bottom: 1px;
     cursor: pointer;
   }
   .class_content_list img {
-    width: 115.5/540 * 100vw;
+    width: 116/540 * 100vw;
     height: 116/540 * 100vw;
     border-radius: 50%;
+    border: 3/540 * 100vw solid #EB8C00;
+    box-sizing: border-box;
   }
   .class_content_list_right {
     display: flex;
@@ -529,17 +566,15 @@ export default {
     margin-left: 38.5/540 * 100vw;
   }
   .class_content_list_right_title {
-    width: 209/540 * 100vw;
+    width: 200/540 * 100vw;
     font-size: 18/540 * 100vw;
     font-family: Source Han Sans CN;
-    color: #EB8C00;
     line-height: 21/540 * 100vw;
     text-align: justify;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
     word-break: break-all;
+  }
+  .class_content_list_right_title_pitch {
+    color: #EB8C00;
   }
   .class_content_list_right_particulars {
     font-size: 15/540 * 100vw;
@@ -548,22 +583,15 @@ export default {
     line-height: 19/540 * 100vw;
     text-align: justify; /* 末尾对齐 */
     margin-top: 11/540 * 100vw;
-  }
-  .class_content_list_right_particulars div{
-    width: 300.5/540 * 100vw;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    word-break: break-all;
-    -webkit-transform:scale(0.7);
-    margin-left: -45/540 * 100vw;
+    width: 230/540 * 100vw;
+    height: 19/540 * 100vw;
   }
   .class_content_list_right_right {
     width: 23.5/540 * 100vw;
     height: 24.5/540 * 100vw;
     background: url('../assets/images/返回 拷贝 3@2x.png') no-repeat;
     background-size: 100%;
+    margin-left: 60/540 * 100vw;
   }
   .dynamic_content_list_to_pitch {
     background: url('../assets/images/返回@2x.png') no-repeat;
